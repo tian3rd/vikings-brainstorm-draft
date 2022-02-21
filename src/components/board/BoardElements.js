@@ -14,22 +14,22 @@ import AR from "../../assets/images/ArrowRed.svg";
 import AY from "../../assets/images/ArrowYellow.svg";
 
 const boardSVG = {
-	N0,
-	N1,
-	N2,
-	N3,
-	O0,
-	O1,
-	O2: O0,
-	O3: O1,
-	BB,
-	BG,
-	BR,
-	BY,
-	AB,
-	AG,
-	AR,
-	AY,
+  N0,
+  N1,
+  N2,
+  N3,
+  O0,
+  O1,
+  O2: O0,
+  O3: O1,
+  BB,
+  BG,
+  BR,
+  BY,
+  AB,
+  AG,
+  AR,
+  AY,
 };
 
 export default boardSVG;
