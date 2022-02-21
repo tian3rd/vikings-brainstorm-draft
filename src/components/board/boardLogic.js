@@ -407,11 +407,7 @@ const findSolution = (boardString, target) => {
 };
 
 const isGameOver = (boardString, target) => {
-	let currentBoats = boardString.substring(18).split("");
-	currentBoats.sort();
-	let targetBoats = target.split("");
-	targetBoats.sort();
-	return currentBoats.join("") === targetBoats.join("");
+	return boardString.substring(18) === target;
 };
 
 export { canRotateTile, rotateTile, findSolution, isGameOver };
