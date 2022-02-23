@@ -14,20 +14,26 @@ import {
   findSolution,
   isGameOver,
 } from "./boardLogic";
+import puzzles from "../../data/objectives.json";
 
-const Tiles = ({ board, target }) => {
-  const [boardString, setBoardString] = useState(board);
-  // const [arrowsState, setArrowsState] = useState(calculateArrowsState(target));
-  const arrowsState = calculateArrowsState(target);
-  // const solution = findSolution(board, target);
-  // console.log("Solution: ", solution);
+const Board = () => {
+  let randomProblem = Math.floor(Math.random() * 60);
+  const [boardString, setBoardString] = useState(puzzles[randomProblem].board);
+  const [arrowsState, setArrowsState] = useState(
+    calculateArrowsState(puzzles[randomProblem].target)
+  );
+
+  const showSolution = () => {
+    const target =
+      arrowsState.AB + arrowsState.AG + arrowsState.AR + arrowsState.AY;
+    const solution = findSolution(boardString, target);
+    console.log("Solution: ", solution);
+  };
 
   const handleClick = (e) => {
     e.preventDefault();
     const position = Number(e.target.title.substring(4));
     if (canRotateTile(boardString, position)) {
-      //   console.log("Rotating tile at position:", position);
-      //   console.log("Old board:", boardString);
       const newBoard = rotateTile(boardString, position);
       setBoardString(newBoard);
     } else {
@@ -35,106 +41,192 @@ const Tiles = ({ board, target }) => {
     }
   };
 
+  const selectChoice = (e) => {
+    const choice = e.target.value;
+    let problemNo;
+    let randomNum = Math.floor(Math.random() * 15);
+    switch (choice) {
+      case "easy":
+        problemNo = randomNum;
+        break;
+      case "medium":
+        problemNo = randomNum + 15;
+        break;
+      case "hard":
+        problemNo = randomNum + 30;
+        break;
+      case "expert":
+        problemNo = randomNum + 45;
+        break;
+    }
+    setBoardString(puzzles[problemNo].board);
+    setArrowsState(calculateArrowsState(puzzles[problemNo].target));
+  };
+
   useEffect(() => {
+    const target =
+      arrowsState.AB + arrowsState.AG + arrowsState.AR + arrowsState.AY;
     if (isGameOver(boardString, target)) {
       setTimeout(() => alert("Congratulations! You won!"), 1000);
     }
-  }, [boardString]);
+  }, [boardString, arrowsState]);
 
   return (
     <Wrapper>
-      <Tile0
-        src={boardSVG[boardString.substring(0, 18).substring(0, 2)]}
-        alt={boardString.substring(0, 18).substring(0, 2)}
-        title="Tile0"
-        onClick={handleClick}
-      />
-      <Tile1
-        src={boardSVG[boardString.substring(0, 18).substring(2, 4)]}
-        alt={boardString.substring(0, 18).substring(2, 4)}
-        title="Tile1"
-        onClick={handleClick}
-      />
-      <Tile2
-        src={boardSVG[boardString.substring(0, 18).substring(4, 6)]}
-        alt={boardString.substring(0, 18).substring(4, 6)}
-        title="Tile2"
-        onClick={handleClick}
-      />
-      <Tile3
-        src={boardSVG[boardString.substring(0, 18).substring(6, 8)]}
-        alt={boardString.substring(0, 18).substring(6, 8)}
-        title="Tile3"
-        onClick={handleClick}
-      />
-      <Tile4
-        src={boardSVG[boardString.substring(0, 18).substring(8, 10)]}
-        alt={boardString.substring(0, 18).substring(8, 10)}
-        title="Tile4"
-        onClick={handleClick}
-      />
-      <Tile5
-        src={boardSVG[boardString.substring(0, 18).substring(10, 12)]}
-        alt={boardString.substring(0, 18).substring(10, 12)}
-        title="Tile5"
-        onClick={handleClick}
-      />
-      <Tile6
-        src={boardSVG[boardString.substring(0, 18).substring(12, 14)]}
-        alt={boardString.substring(0, 18).substring(12, 14)}
-        title="Tile6"
-        onClick={handleClick}
-      />
-      <Tile7
-        src={boardSVG[boardString.substring(0, 18).substring(14, 16)]}
-        alt={boardString.substring(0, 18).substring(14, 16)}
-        title="Tile7"
-        onClick={handleClick}
-      />
-      <Tile8
-        src={boardSVG[boardString.substring(0, 18).substring(16, 18)]}
-        alt={boardString.substring(0, 18).substring(16, 18)}
-        title="Tile8"
-        onClick={handleClick}
-      />
-      <Boat0
-        src={boardSVG.BB}
-        title="BlueBoat"
-        alt={calculateBoatsState(boardString.substring(18)).BB}
-      />
-      <Boat1
-        src={boardSVG.BG}
-        title="GreenBoat"
-        alt={calculateBoatsState(boardString.substring(18)).BG}
-      />
-      <Boat2
-        src={boardSVG.BR}
-        title="RedBoat"
-        alt={calculateBoatsState(boardString.substring(18)).BR}
-      />
-      <Boat3
-        src={boardSVG.BY}
-        title="YellowBoat"
-        alt={calculateBoatsState(boardString.substring(18)).BY}
-      />
-      <Arrow0 src={boardSVG.AB} title="BlueArrow" alt={arrowsState.AB} />
-      <Arrow1 src={boardSVG.AG} title="GreenArrow" alt={arrowsState.AG} />
-      <Arrow2 src={boardSVG.AR} title="RedArrow" alt={arrowsState.AR} />
-      <Arrow3 src={boardSVG.AY} title="YellowArrow" alt={arrowsState.AY} />
+      <BoardWrapper>
+        <Tile0
+          src={boardSVG[boardString.substring(0, 18).substring(0, 2)]}
+          alt={boardString.substring(0, 18).substring(0, 2)}
+          title="Tile0"
+          onClick={handleClick}
+        />
+        <Tile1
+          src={boardSVG[boardString.substring(0, 18).substring(2, 4)]}
+          alt={boardString.substring(0, 18).substring(2, 4)}
+          title="Tile1"
+          onClick={handleClick}
+        />
+        <Tile2
+          src={boardSVG[boardString.substring(0, 18).substring(4, 6)]}
+          alt={boardString.substring(0, 18).substring(4, 6)}
+          title="Tile2"
+          onClick={handleClick}
+        />
+        <Tile3
+          src={boardSVG[boardString.substring(0, 18).substring(6, 8)]}
+          alt={boardString.substring(0, 18).substring(6, 8)}
+          title="Tile3"
+          onClick={handleClick}
+        />
+        <Tile4
+          src={boardSVG[boardString.substring(0, 18).substring(8, 10)]}
+          alt={boardString.substring(0, 18).substring(8, 10)}
+          title="Tile4"
+          onClick={handleClick}
+        />
+        <Tile5
+          src={boardSVG[boardString.substring(0, 18).substring(10, 12)]}
+          alt={boardString.substring(0, 18).substring(10, 12)}
+          title="Tile5"
+          onClick={handleClick}
+        />
+        <Tile6
+          src={boardSVG[boardString.substring(0, 18).substring(12, 14)]}
+          alt={boardString.substring(0, 18).substring(12, 14)}
+          title="Tile6"
+          onClick={handleClick}
+        />
+        <Tile7
+          src={boardSVG[boardString.substring(0, 18).substring(14, 16)]}
+          alt={boardString.substring(0, 18).substring(14, 16)}
+          title="Tile7"
+          onClick={handleClick}
+        />
+        <Tile8
+          src={boardSVG[boardString.substring(0, 18).substring(16, 18)]}
+          alt={boardString.substring(0, 18).substring(16, 18)}
+          title="Tile8"
+          onClick={handleClick}
+        />
+        <Boat0
+          src={boardSVG.BB}
+          title="BlueBoat"
+          alt={calculateBoatsState(boardString.substring(18)).BB}
+        />
+        <Boat1
+          src={boardSVG.BG}
+          title="GreenBoat"
+          alt={calculateBoatsState(boardString.substring(18)).BG}
+        />
+        <Boat2
+          src={boardSVG.BR}
+          title="RedBoat"
+          alt={calculateBoatsState(boardString.substring(18)).BR}
+        />
+        <Boat3
+          src={boardSVG.BY}
+          title="YellowBoat"
+          alt={calculateBoatsState(boardString.substring(18)).BY}
+        />
+        <Arrow0 src={boardSVG.AB} title="BlueArrow" alt={arrowsState.AB} />
+        <Arrow1 src={boardSVG.AG} title="GreenArrow" alt={arrowsState.AG} />
+        <Arrow2 src={boardSVG.AR} title="RedArrow" alt={arrowsState.AR} />
+        <Arrow3 src={boardSVG.AY} title="YellowArrow" alt={arrowsState.AY} />
+      </BoardWrapper>
+      <SelectWrapper>
+        <div>
+          <RadioWrapper
+            type="radio"
+            name="level"
+            value="easy"
+            onClick={selectChoice}
+          />
+          <label>Easy</label>
+        </div>
+        <div>
+          <RadioWrapper
+            type="radio"
+            name="level"
+            value="medium"
+            onClick={selectChoice}
+          />
+          <label>Medium</label>
+        </div>
+        <div>
+          <RadioWrapper
+            type="radio"
+            name="level"
+            value="hard"
+            onClick={selectChoice}
+          />
+          <label>Hard</label>
+        </div>
+        <div>
+          <RadioWrapper
+            type="radio"
+            name="level"
+            value="expert"
+            onClick={selectChoice}
+          />
+          <label>Expert</label>
+        </div>
+      </SelectWrapper>
+      <Solution onClick={showSolution} id="solution">
+        Solution
+      </Solution>
     </Wrapper>
   );
 };
 
-export default Tiles;
+export default Board;
 
 const Wrapper = styled.div`
+  display: grid;
+  place-items: center;
+  z-index: 30;
+`;
+
+const SelectWrapper = styled.div`
+  display: flex;
+  margin-top: 50px;
+  gap: 20px;
+`;
+
+const Solution = styled.p`
+  cursor: pointer;
+  margin-top: 20px;
+  color: rgba(255, 255, 255, 0.1);
+`;
+
+const BoardWrapper = styled.div`
   position: relative;
   /* border: 1px solid red; */
   height: 573px;
   width: 573px;
   margin: 0 auto 50px;
-  z-index: 10;
 `;
+
+const RadioWrapper = styled.input``;
 
 const Arrow0 = styled.img`
   position: absolute;

@@ -24,6 +24,6 @@ const Wave = styled.img`
   position: absolute;
   width: 100%;
   height: 323.61px;
-  top: -150px;
+  top: -203px;
   z-index: 1;
 `;
